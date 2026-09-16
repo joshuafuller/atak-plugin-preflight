@@ -1,0 +1,13 @@
+.git
+.test-subjects
+reports
+__pycache__
+.pytest_cache
+.venv
+*.apk
+*.aab
+*.jks
+*.keystore
+.env
+.env.*
+.DS_Store

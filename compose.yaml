@@ -1,0 +1,11 @@
+services:
+  preflight:
+    build: .
+    image: atak-plugin-preflight:local
+    working_dir: /workspace/source
+    volumes:
+      - ${ATAK_PLUGIN_SOURCE:-.}:/workspace/source:ro
+      - ${ATAK_PREFLIGHT_REPORTS:-./reports}:/workspace/reports
+      # User-downloaded ATAK SDK from tak.gov; never included in this image.
+      - ${ATAK_SDK:-./.no-sdk}:/opt/atak-sdk:ro
+    command: ["/workspace/source"]
