@@ -3,6 +3,7 @@ name: Preflight tool tests
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -11,9 +12,29 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: '3.12'
+      - name: Install pinned Semgrep
+        run: python -m pip install --disable-pip-version-check 'semgrep==1.161.0'
+      - name: Install pinned Trivy
+        run: |
+          curl -fsSL https://github.com/aquasecurity/trivy/releases/download/v0.74.0/trivy_0.74.0_Linux-64bit.tar.gz -o /tmp/trivy.tar.gz
+          echo "2ae6fe3ee734b7fdf11335663e18c75ea12dccc76062f09f164a3b0f8be4371a  /tmp/trivy.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/trivy.tar.gz -C /usr/local/bin trivy
+      - name: Install pinned OSV-Scanner
+        run: |
+          curl -fsSL https://github.com/google/osv-scanner/releases/download/v2.5.1/osv-scanner_linux_amd64 -o /usr/local/bin/osv-scanner
+          echo "f9f25499a2c8cc367b3af45df2ea7eeca7fbccceab9c35079968f4b3652194be  /usr/local/bin/osv-scanner" | sha256sum -c -
+          chmod +x /usr/local/bin/osv-scanner
       - run: python -m unittest discover -s tests -v
       - run: python preflight.py --help
+      - name: Run fixture preflight
+        run: python preflight.py tests/fixtures/minimal-plugin --json
+      - name: Upload fixture evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: self-test-preflight
+          path: reports/

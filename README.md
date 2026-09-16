@@ -7,7 +7,8 @@ An agent-first, source-first pre-flight runner for ATAK plugin authors. It
 produces a terminal summary, machine-readable receipt, HTML report, retained
 scanner output, and SHA-256 source evidence.
 
-[![CI workflow](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?logo=githubactions&logoColor=white)](docs/ci.md)
+[![CI](https://github.com/joshuafuller/atak-plugin-preflight/actions/workflows/self-test.yml/badge.svg)](https://github.com/joshuafuller/atak-plugin-preflight/actions/workflows/self-test.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Docker](https://img.shields.io/badge/Docker-supported-2496ED?logo=docker&logoColor=white)](Dockerfile)
 [![Scope](https://img.shields.io/badge/scope-source--first-5B5BD6)](docs/knowledge-base.md)
@@ -49,6 +50,9 @@ rights reserved by those owners. This repository claims no ownership of them.
 python3 preflight.py path/to/my-plugin
 ```
 
+Use `--json` when another agent or CI needs a machine-readable result. It emits
+JSON only; the same receipt is also saved under the report directory.
+
 The report is written to:
 
 ```text
@@ -74,7 +78,8 @@ pull requests and uploads the report as an artifact.
 > [!NOTE]
 > The ATAK SDK is not included. Download the required SDK from
 > [tak.gov](https://tak.gov/) yourself and keep it outside public source
-> control. No TPP credentials or signing key are needed for these checks.
+> control. See the [SDK handoff guide](docs/sdk.md) for the expected locations.
+> No TPP credentials or signing key are needed for these checks.
 
 ## What it checks
 
@@ -82,7 +87,7 @@ pull requests and uploads the report as an artifact.
 | --- | --- |
 | Project shape | Gradle files, Android module, source manifest |
 | ATAK metadata | `plugin-api` or `atakApiVersion` references |
-| Source SAST | Semgrep Community Edition |
+| Source SAST | Semgrep with the repository-owned baseline rules |
 | Dependencies and secrets | OSV-Scanner and Trivy when installed |
 | Evidence | Source inventory, hashes, JSON receipt, HTML report, raw scan output |
 
@@ -132,6 +137,8 @@ flowchart LR
 - [Beginner workflow](docs/workflow.md) — the complete path from source to TPP.
 - [GitHub Actions CI](docs/ci.md) — copy the ready-to-run workflow into your
   own plugin repository.
+- [ATAK SDK handoff](docs/sdk.md) — where the agent expects a user-downloaded
+  SDK and how to configure it.
 - [Knowledge base](docs/knowledge-base.md) — ATAK compatibility, TPP observations,
   Fortify finding triage, and evidence boundaries.
 - [TPP pipeline map](docs/tpp-pipeline.md) — what we can reproduce locally and

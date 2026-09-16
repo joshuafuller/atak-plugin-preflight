@@ -26,20 +26,22 @@ your-plugin/
 │   └── workflows/
 │       └── atak-plugin-preflight.yml
 ├── preflight.py
+├── semgrep.yml
 ├── app/
 └── ...
 ```
 
-Copy these two files from this repository:
+Copy these three files from this repository:
 
 1. [`preflight.py`](../preflight.py) to the root of your plugin repository.
 2. [`atak-plugin-preflight.yml`](../templates/github-actions/atak-plugin-preflight.yml)
    to `.github/workflows/atak-plugin-preflight.yml`.
+3. [`semgrep.yml`](../semgrep.yml) to the root of your plugin repository.
 
 Then commit and push:
 
 ```sh
-git add preflight.py .github/workflows/atak-plugin-preflight.yml
+git add preflight.py semgrep.yml .github/workflows/atak-plugin-preflight.yml
 git commit -m "ci: add ATAK plugin preflight"
 git push
 ```
@@ -66,11 +68,14 @@ The workflow:
 - checks out the repository;
 - installs Python 3.12, Semgrep, Trivy, and OSV-Scanner;
 - runs `python preflight.py . --json`;
+- receives JSON-only stdout suitable for CI parsing;
 - fails when a required project check, scanner, or finding blocks a clean run;
 - uploads `reports/` even when the check fails.
 
-The scanner versions are pinned in the template. Review and update those pins
-deliberately; a scanner update can change findings.
+The scanner versions and baseline Semgrep rules are pinned in the template.
+Review and update those pins deliberately; a scanner or rule update can change
+findings. Set `SEMGREP_CONFIG` in a local environment if the plugin needs an
+additional reviewed rule file.
 
 ## Reading the result
 

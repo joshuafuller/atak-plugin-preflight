@@ -75,7 +75,7 @@ are not shipped in the application.
 | --- | --- | --- |
 | TakDev/Gradle release build | The plugin's Gradle wrapper and declared ATAK SDK | The project builds for the selected SDK and variant |
 | Manifest/package inspection | Android Build Tools `aapt2` | Package, version, SDK levels, and plugin metadata |
-| Source SAST | Semgrep Community Edition with pinned rules | Pattern/data-flow findings in scanned source |
+| Source SAST | Semgrep with the repository-owned baseline rules | Pattern findings in scanned source |
 | Dependency advisories | OSV-Scanner over lockfiles; OWASP Dependency-Check when installed | Known advisories for recognized package coordinates |
 | Secrets/configuration | Trivy filesystem scan | Recognized secrets, vulnerabilities, and misconfigurations |
 | Runtime behavior | ADB emulator/device tests and UIAutomator | Behavior on that exact Android/ATAK setup |
@@ -123,16 +123,17 @@ it” is external-required.
 ```mermaid
 flowchart LR
     S[Plugin source] --> C[Preflight container]
-    K[Private ATAK SDK mount] --> C
     C --> O[Open-source scans and reports]
     H[Host ADB emulator] --> T[Runtime/UIAutomator checks]
     C --> T
 ```
 
 The Docker image pins the open-source scanner versions and contains no ATAK
-SDK or user source by default. Users download the required SDK from tak.gov and
-mount it read-only at runtime for the Gradle stage. No TPP credentials or
-signing key are needed for local preflight because it does not sign an APK.
+SDK or user source by default. The current container runs source scans only;
+it does not perform the Gradle stage. Users download any required SDK from
+tak.gov themselves and use it read-only in the plugin's documented build
+environment. No TPP credentials or signing key are needed for local preflight
+because it does not sign an APK.
 Emulator testing remains host-connected because Android emulators and ADB are
 more reliable outside a generic scanner container; the container can still
 produce the test command and consume its receipt.

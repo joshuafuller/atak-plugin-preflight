@@ -1,0 +1,14 @@
+rules:
+  - id: weak-message-digest
+    languages: [java, kotlin]
+    message: Do not use MD5 or SHA-1 for security-sensitive operations without a documented reason.
+    severity: WARNING
+    patterns:
+      - pattern-either:
+          - pattern: MessageDigest.getInstance("MD5")
+          - pattern: MessageDigest.getInstance("SHA-1")
+  - id: unsafe-document-builder-factory
+    languages: [java]
+    message: Review XML parser hardening before accepting untrusted XML.
+    severity: WARNING
+    pattern: DocumentBuilderFactory.newInstance()

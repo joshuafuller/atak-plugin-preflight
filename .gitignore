@@ -3,5 +3,8 @@ __pycache__/
 .venv/
 dist/
 reports/
+graphify-out/
 .test-subjects/
 *.pyc
+.coverage
+.ruff_cache/

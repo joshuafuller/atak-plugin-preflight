@@ -14,6 +14,8 @@ When helping a user:
 7. Keep source, build-input, artifact, and report hashes together in the handoff.
 8. Read [docs/knowledge-base.md](docs/knowledge-base.md) before making ATAK
    compatibility claims.
+9. Read [docs/sdk.md](docs/sdk.md) before asking the user for an ATAK SDK or
+   attempting an SDK-backed build.
 
 Evidence levels are explicit:
 

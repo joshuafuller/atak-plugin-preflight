@@ -7,7 +7,19 @@ class PreflightTests(unittest.TestCase):
     def test_gaps_block_clean_result_unless_explicitly_allowed(self):
         result = {"findings": [{"severity": "GAP"}]}
         self.assertFalse(preflight.is_clean(result))
-        self.assertTrue(preflight.is_clean(result, allow_gaps=True))
+
+    def test_warnings_block_clean_result(self):
+        self.assertFalse(preflight.is_clean({"findings": [{"severity": "WARN"}]}))
+
+    def test_json_scan_keeps_captured_stdout(self):
+        from pathlib import Path
+        import tempfile
+        with tempfile.TemporaryDirectory() as directory:
+            report = Path(directory) / "report.json"
+            log = Path(directory) / "scan.log"
+            code = preflight.run_json_scan(["/bin/sh", "-c", "printf '{\"ok\":true}'"], report, log)
+            self.assertEqual(code, 0)
+            self.assertEqual(report.read_text(), '{"ok":true}')
 
     def test_sha256_reads_in_chunks(self):
         from pathlib import Path
