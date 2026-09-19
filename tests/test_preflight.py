@@ -21,6 +21,19 @@ class PreflightTests(unittest.TestCase):
             self.assertEqual(code, 0)
             self.assertEqual(report.read_text(), '{"ok":true}')
 
+    def test_manifest_does_not_need_a_src_directory(self):
+        from pathlib import Path
+        import tempfile
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "atak_plugin").mkdir()
+            (root / "build.gradle").write_text("plugins {}")
+            (root / "atak_plugin/AndroidManifest.xml").write_text("<manifest />")
+            result = {"findings": []}
+            preflight.inspect_source(root, result)
+            self.assertEqual(result["source_manifest"], "atak_plugin/AndroidManifest.xml")
+            self.assertNotIn("Android manifest missing", [f["title"] for f in result["findings"]])
+
     def test_sha256_reads_in_chunks(self):
         from pathlib import Path
         path = Path(self.id().replace(".", "-") + ".tmp")

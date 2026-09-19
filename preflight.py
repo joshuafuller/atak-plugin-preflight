@@ -71,7 +71,7 @@ def inspect_source(source: Path, result: dict) -> None:
         check(result, "FAIL", "Gradle build files missing",
               "No build.gradle or build.gradle.kts was found.",
               "Open the plugin repository root or add the ATAK Gradle build files.")
-    manifests = [path for path in files if path.name == "AndroidManifest.xml" and "src" in path.parts]
+    manifests = [path for path in files if path.name == "AndroidManifest.xml"]
     manifest = next((path for path in manifests if "main" in path.parts), manifests[0] if manifests else None)
     if manifest:
         text = manifest.read_text(errors="replace")
@@ -134,7 +134,8 @@ def run_source_scans(source: Path, output: Path, result: dict) -> None:
     osv = shutil.which("osv-scanner")
     if osv:
         record_tool(result, "osv-scanner", osv)
-        command = [osv, "scan", "source", "--format", "json", "--recursive", str(source)]
+        command = [osv, "scan", "source", "--format", "json", "--recursive",
+                   "--no-ignore", "--allow-no-lockfiles", str(source)]
         result.setdefault("scan_commands", {})["osv-scanner"] = command
         code = run_json_scan(command,
                              scans / "osv.json", scans / "osv.log")
@@ -168,7 +169,7 @@ def main() -> int:
               "source": str(source), "findings": []}
     inspect_source(source, result)
     output = (args.output or Path("reports") /
-              f"preflight-{datetime.now():%Y%m%d-%H%M%S}").resolve()
+              f"preflight-{datetime.now():%Y%m%d-%H%M%S-%f}").resolve()
     output.mkdir(parents=True, exist_ok=True)
     run_source_scans(source, output, result)
     result["finished_at_utc"] = datetime.now(timezone.utc).isoformat()

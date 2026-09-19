@@ -56,7 +56,7 @@ JSON only; the same receipt is also saved under the report directory.
 The report is written to:
 
 ```text
-reports/preflight-YYYYMMDD-HHMMSS/
+reports/preflight-YYYYMMDD-HHMMSS-microseconds/
 ```
 
 ### Run with Docker
