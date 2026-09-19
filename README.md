@@ -7,7 +7,6 @@ An agent-first, source-first pre-flight runner for ATAK plugin authors. It
 produces a terminal summary, machine-readable receipt, HTML report, retained
 scanner output, and SHA-256 source evidence.
 
-[![CI](https://github.com/joshuafuller/atak-plugin-preflight/actions/workflows/self-test.yml/badge.svg)](https://github.com/joshuafuller/atak-plugin-preflight/actions/workflows/self-test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Docker](https://img.shields.io/badge/Docker-supported-2496ED?logo=docker&logoColor=white)](Dockerfile)
